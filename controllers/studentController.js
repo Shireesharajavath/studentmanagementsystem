@@ -64,11 +64,11 @@ async function update_Student(req, res) {
 async function delete_Student(req, res) {
   const id = req.params.id;
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('students')
-    .delete()
-    .eq('id', id);
-
+    .update({ name, age, gender, marks, grades: grade })
+    .eq('id', id)
+    .select();
   if (error) return res.status(500).json({ error: error.message });
 
   res.status(200).json({ message: 'Student deleted' });
