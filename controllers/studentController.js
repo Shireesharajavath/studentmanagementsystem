@@ -8,7 +8,7 @@ function get_grade(marks) {
   return 'F';
 }
 
-
+// Add a new student
 async function add_Student(req, res) {
   const { name, age, gender, marks } = req.body;
   const grade = get_grade(marks);
@@ -30,7 +30,7 @@ async function add_Student(req, res) {
   });
 }
 
-
+// Get all students
 async function get_All_Students(req, res) {
   const { data, error } = await supabase
     .from('students')
@@ -47,10 +47,20 @@ async function update_Student(req, res) {
   const { name, age, gender, marks } = req.body;
   const grade = get_grade(marks);
 
+  const { data: existing, error: fetchError } = await supabase
+    .from('students')
+    .select('*')
+    .eq('id', id);
+
+  if (fetchError || !existing || existing.length === 0) {
+    return res.status(404).json({ error: 'Student not found' });
+  }
+
   const { data, error } = await supabase
     .from('students')
     .update({ name, age, gender, marks, grades: grade })
-    .eq('id', id);
+    .eq('id', id)
+    .select();
 
   if (error) return res.status(500).json({ error: error.message });
 
@@ -60,20 +70,29 @@ async function update_Student(req, res) {
   });
 }
 
-
 async function delete_Student(req, res) {
   const id = req.params.id;
 
-  const { data, error } = await supabase
+
+  const { data: existing, error: fetchError } = await supabase
     .from('students')
-    .update({ name, age, gender, marks, grades: grade })
-    .eq('id', id)
-    .select();
+    .select('id')
+    .eq('id', id);
+
+  if (fetchError || !existing || existing.length === 0) {
+    return res.status(404).json({ error: 'Student not found' });
+  }
+
+ 
+  const { error } = await supabase
+    .from('students')
+    .delete()
+    .eq('id', id);
+
   if (error) return res.status(500).json({ error: error.message });
 
   res.status(200).json({ message: 'Student deleted' });
 }
-
 
 module.exports = {
   add_Student,
