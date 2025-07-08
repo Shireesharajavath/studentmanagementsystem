@@ -1,0 +1,23 @@
+<h1>Student Info</h1>
+<div id="studentDetail"></div>
+<button id="editBtn">Edit</button>
+<button id="deleteBtn">Delete</button>
+<script src="script.js"></script>
+<script>
+  const id = new URLSearchParams(window.location.search).get('id');
+  getStudent(id).then(student => {
+    const div = document.getElementById('studentDetail');
+    div.innerHTML = `
+      <p>Name: ${student.name}</p>
+      <p>Marks: ${student.marks}</p>
+      <p>Grade: ${student.grades}</p>
+    `;
+    document.getElementById('editBtn').onclick = () => {
+      window.location.href = `edit.html?id=${id}`;
+    };
+    document.getElementById('deleteBtn').onclick = async () => {
+      await deleteStudent(id);
+      window.location.href = 'index.html';
+    };
+  });
+</script>

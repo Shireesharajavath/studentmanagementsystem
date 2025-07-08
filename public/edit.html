@@ -1,0 +1,25 @@
+<h1>Edit Student</h1>
+<form id="studentForm">
+  <input id="name" placeholder="Name" required />
+  <input id="age" type="number" placeholder="Age" required />
+  <input id="gender" placeholder="Gender" required />
+  <input id="marks" type="number" placeholder="Marks" required />
+  <button type="submit">Save</button>
+</form>
+<script src="script.js"></script>
+<script>
+  const id = new URLSearchParams(window.location.search).get('id');
+  getStudent(id).then(student => {
+    document.getElementById('name').value = student.name;
+    document.getElementById('age').value = student.age;
+    document.getElementById('gender').value = student.gender;
+    document.getElementById('marks').value = student.marks;
+  });
+
+  document.getElementById('studentForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const updated = getFormData(); 
+    await updateStudent(id, updated);
+    window.location.href = 'index.html';
+  });
+</script>
