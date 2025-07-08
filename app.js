@@ -13,6 +13,9 @@ app.use(cors());
 app.use(express.json());
 
 
+app.use(express.static('public'));
+
+
 app.post('/add-student', add_Student);
 app.get('/students', get_All_Students);
 app.put('/update-student/:id', update_Student);
