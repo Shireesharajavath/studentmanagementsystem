@@ -1,18 +1,66 @@
-
-<h1>All Students</h1>
-<button onclick="window.location.href='add.html'">Add Student</button>
-<ul id="studentList"></ul>
-
-<script src="script.js"></script>
-<script>
-  fetch('/students')
-    .then(res => res.json())
-    .then(students => {
-      const list = document.getElementById('studentList');
-      students.forEach(s => {
-        const li = document.createElement('li');
-        li.innerHTML = `<a href="student.html?id=${s.id}">${s.name}</a>`;
-        list.appendChild(li);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <h1 style="margin-bottom: 0;">Student Management System</h1>
+      <a href="add.html"><button>Add Student</button></a>
+    </div>
+    <table id="studentsTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Marks</th>
+          <th>Grade</th>
+          <th colspan="2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Student rows will be inserted here by script.js -->
+      </tbody>
+    </table>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    fetch('/students')
+      .then(res => res.json())
+      .then(students => {
+        const tableBody = document.querySelector('#studentsTable tbody');
+        students.forEach(s => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><a href="student.html?id=${s.id}">${s.name}</a></td>
+            <td>${s.age}</td>
+            <td>${s.gender}</td>
+            <td>${s.marks}</td>
+            <td>${s.grade || s.grades || ''}</td>
+            <td class="actions" colspan="2">
+              <button onclick="window.location.href='edit.html?id=${s.id}'">Edit</button>
+              <button class="delete-btn" onclick="deleteStudent(${s.id})">Delete</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
       });
-    });
-</script>
+
+    function deleteStudent(id) {
+      if (confirm('Are you sure you want to delete this student?')) {
+        fetch(`/students/${id}`, { method: 'DELETE' })
+          .then(res => res.json())
+          .then(() => {
+            alert('Student deleted');
+            location.reload();
+          });
+      }
+    }
+  </script>
+</body>
+</html>

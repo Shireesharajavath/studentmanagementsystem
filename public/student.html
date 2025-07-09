@@ -1,23 +1,45 @@
-<h1>Student Info</h1>
-<div id="studentDetail"></div>
-<button id="editBtn">Edit</button>
-<button id="deleteBtn">Delete</button>
-<script src="script.js"></script>
-<script>
-  const id = new URLSearchParams(window.location.search).get('id');
-  getStudent(id).then(student => {
-    const div = document.getElementById('studentDetail');
-    div.innerHTML = `
-      <p>Name: ${student.name}</p>
-      <p>Marks: ${student.marks}</p>
-      <p>Grade: ${student.grades}</p>
-    `;
-    document.getElementById('editBtn').onclick = () => {
-      window.location.href = `edit.html?id=${id}`;
-    };
-    document.getElementById('deleteBtn').onclick = async () => {
-      await deleteStudent(id);
-      window.location.href = 'index.html';
-    };
-  });
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Info</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Student Details</h2>
+    <table>
+      <tbody id="studentDetail">
+        <!-- Student details will be inserted here -->
+      </tbody>
+    </table>
+    <div class="actions">
+      <button id="editBtn">Edit</button>
+      <button id="deleteBtn">Delete</button>
+      <a href="index.html"><button type="button">Back to List</button></a>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    const id = new URLSearchParams(window.location.search).get('id');
+    getStudent(id).then(student => {
+      const tbody = document.getElementById('studentDetail');
+      tbody.innerHTML = `
+        <tr><th>Name</th><td>${student.name}</td></tr>
+        <tr><th>Age</th><td>${student.age}</td></tr>
+        <tr><th>Gender</th><td>${student.gender}</td></tr>
+        <tr><th>Marks</th><td>${student.marks}</td></tr>
+        <tr><th>Grade</th><td>${student.grades}</td></tr>
+      `;
+      document.getElementById('editBtn').onclick = () => {
+        window.location.href = `edit.html?id=${id}`;
+      };
+      document.getElementById('deleteBtn').onclick = async () => {
+        await deleteStudent(id);
+        window.location.href = 'index.html';
+      };
+    });
+  </script>
+</body>
+</html>

@@ -1,25 +1,58 @@
-<h1>Edit Student</h1>
-<form id="studentForm">
-  <input id="name" placeholder="Name" required />
-  <input id="age" type="number" placeholder="Age" required />
-  <input id="gender" placeholder="Gender" required />
-  <input id="marks" type="number" placeholder="Marks" required />
-  <button type="submit">Save</button>
-</form>
-<script src="script.js"></script>
-<script>
-  const id = new URLSearchParams(window.location.search).get('id');
-  getStudent(id).then(student => {
-    document.getElementById('name').value = student.name;
-    document.getElementById('age').value = student.age;
-    document.getElementById('gender').value = student.gender;
-    document.getElementById('marks').value = student.marks;
-  });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Student</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Edit Student</h2>
+    <form id="editStudentForm" style="max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" min="1" required>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender" required>
+          <option value="">Select</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label for="marks">Marks</label>
+        <input type="number" id="marks" name="marks" min="0" max="100" required>
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button type="submit">Update Student</button>
+        <a href="index.html" style="text-decoration: none;"><button type="button">Back to List</button></a>
+      </div>
+    </form>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    const id = new URLSearchParams(window.location.search).get('id');
+    getStudent(id).then(student => {
+      document.getElementById('name').value = student.name;
+      document.getElementById('age').value = student.age;
+      document.getElementById('gender').value = student.gender;
+      document.getElementById('marks').value = student.marks;
+    });
 
-  document.getElementById('studentForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const updated = getFormData(); 
-    await updateStudent(id, updated);
-    window.location.href = 'index.html';
-  });
-</script>
+    document.getElementById('editStudentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const updated = getFormData(); 
+      await updateStudent(id, updated);
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
