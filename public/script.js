@@ -1,34 +1,40 @@
-function getFormData() {
-  return {
-    name: document.getElementById('name').value,
-    age: Number(document.getElementById('age').value),
-    gender: document.getElementById('gender').value,
-    marks: Number(document.getElementById('marks').value),
-  };
-}
+async function fetchStudents() {
+  const res = await fetch('http://localhost:4000/students');
+  const data = await res.json();
 
-async function getStudent(id) {
-  const res = await fetch('/students');
-  const students = await res.json();
-  return students.find(s => s.id == id);
-}
+  const tbody = document.getElementById('studentTableBody');
+  tbody.innerHTML = '';
 
-async function addStudent(student) {
-  await fetch('/add-student', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(student),
+  data.forEach(student => {
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+      <td><a href="student.html?id=${student.id}">${student.name}</a></td>
+      <td>${student.age}</td>
+      <td>${student.gender}</td>
+      <td>${student.marks}</td>
+      <td>${student.grades || '-'}</td>
+      <td>
+        <button class="edit-btn" onclick="editStudent(${student.id})">Edit</button>
+        <button class="delete-btn" onclick="deleteStudent(${student.id})">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
   });
 }
 
-async function updateStudent(id, student) {
-  await fetch(`/update-student/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(student),
-  });
+function editStudent(id) {
+  window.location.href = `edit.html?id=${id}`;
 }
 
 async function deleteStudent(id) {
-  await fetch(`/delete-student/${id}`, { method: 'DELETE' });
+  const confirmed = confirm("Are you sure you want to delete this student?");
+  if (!confirmed) return;
+
+  await fetch(`http://localhost:4000/students/${id}`, {
+    method: 'DELETE'
+  });
+  fetchStudents(); 
 }
+
+fetchStudents();

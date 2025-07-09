@@ -1,23 +1,41 @@
-<h1>Student Info</h1>
-<div id="studentDetail"></div>
-<button id="editBtn">Edit</button>
-<button id="deleteBtn">Delete</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Details</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+</head>
+<body>
+  
+  <div class="card">
+    <h2>Student Details</h2>
+
+   
+    <table class="details-table">
+      <tr><th>Name</th><td id="name"></td></tr>
+      <tr><th>Age</th><td id="age"></td></tr>
+      <tr><th>Gender</th><td id="gender"></td></tr>
+      <tr><th>Marks</th><td id="marks"></td></tr>
+      <tr><th>Grade</th><td id="grade"></td></tr>
+    </table>
+
+  
+    <div class="form-buttons">
+      <button class="edit-btn" id="editBtn">Edit</button>
+      <button class="delete-btn" id="deleteBtn">Delete</button>
+      <button class="back-btn" onclick="location.href='index.html'">Back to List</button>
+    </div>
+  </div>
 <script src="script.js"></script>
-<script>
-  const id = new URLSearchParams(window.location.search).get('id');
-  getStudent(id).then(student => {
-    const div = document.getElementById('studentDetail');
-    div.innerHTML = `
-      <p>Name: ${student.name}</p>
-      <p>Marks: ${student.marks}</p>
-      <p>Grade: ${student.grades}</p>
-    `;
-    document.getElementById('editBtn').onclick = () => {
-      window.location.href = `edit.html?id=${id}`;
-    };
-    document.getElementById('deleteBtn').onclick = async () => {
-      await deleteStudent(id);
+  <script>
+    document.getElementById('studentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const student = getFormData(); 
+      await updateStudent(student); 
       window.location.href = 'index.html';
-    };
-  });
-</script>
+    });
+  </script>
+
+  </body>
+</html>
