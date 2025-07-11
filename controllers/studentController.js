@@ -8,7 +8,7 @@ function get_grade(marks) {
   return 'F';
 }
 
-// Add a new student
+
 async function add_Student(req, res) {
   const { name, age, gender, marks } = req.body;
   const grade = get_grade(marks);
@@ -30,7 +30,7 @@ async function add_Student(req, res) {
   });
 }
 
-// Get all students
+
 async function get_All_Students(req, res) {
   const { data, error } = await supabase
     .from('students')

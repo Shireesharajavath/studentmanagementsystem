@@ -1,41 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Student Details</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  
-  <div class="card">
+  <div class="form-container">
     <h2>Student Details</h2>
 
-   
-    <table class="details-table">
-      <tr><th>Name</th><td id="name"></td></tr>
-      <tr><th>Age</th><td id="age"></td></tr>
-      <tr><th>Gender</th><td id="gender"></td></tr>
-      <tr><th>Marks</th><td id="marks"></td></tr>
-      <tr><th>Grade</th><td id="grade"></td></tr>
-    </table>
+    <div class="field">
+      <label>Name</label>
+      <input type="text" id="detail-name" readonly>
+    </div>
 
-  
-    <div class="form-buttons">
-      <button class="edit-btn" id="editBtn">Edit</button>
-      <button class="delete-btn" id="deleteBtn">Delete</button>
-      <button class="back-btn" onclick="location.href='index.html'">Back to List</button>
+    <div class="field">
+      <label>Age</label>
+      <input type="number" id="detail-age" readonly>
+    </div>
+
+    <div class="field">
+      <label>Gender</label>
+      <select id="detail-gender" disabled>
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Marks</label>
+      <input type="number" id="detail-marks" readonly>
+    </div>
+
+    <div class="field">
+      <label>Grade</label>
+      <input type="text" id="detail-grade" readonly>
+    </div>
+
+    <div class="actions">
+      <button class="blue-btn" id="editBtn">Edit</button>
+      <button class="red-btn" id="deleteBtn">Delete</button>
+      <button class="blue-btn full-width" onclick="window.location.href='index.html'">Back to List</button>
     </div>
   </div>
-<script src="script.js"></script>
-  <script>
-    document.getElementById('studentForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const student = getFormData(); 
-      await updateStudent(student); 
-      window.location.href = 'index.html';
-    });
-  </script>
 
-  </body>
+  <script src="script.js"></script>
+</body>
 </html>
