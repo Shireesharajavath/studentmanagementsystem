@@ -1,13 +1,12 @@
-
-
- 
-// Load student list on index.html
+// Universal onload logic
 window.onload = () => {
-  const tbody = document.getElementById('studentTableBody');
+  const path = window.location.pathname;
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
- 
-  if (tbody) {
+
+  // 1. index.html — Show all students
+  const tbody = document.getElementById('studentTableBody');
+  if (path.includes('index.html') && tbody) {
     fetch('http://localhost:4000/students')
       .then(res => res.json())
       .then(data => {
@@ -29,10 +28,10 @@ window.onload = () => {
         });
       });
   }
- 
-  // Load student data on edit.html
+
+  // 2. edit.html — Load edit form
   const editForm = document.getElementById('editForm');
-  if (editForm && id) {
+  if (path.includes('edit.html') && editForm && id) {
     fetch(`http://localhost:4000/students/${id}`)
       .then(res => res.json())
       .then(student => {
@@ -41,7 +40,7 @@ window.onload = () => {
         document.getElementById('edit-gender').value = student.gender;
         document.getElementById('edit-marks').value = student.marks;
       });
- 
+
     editForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const updatedStudent = {
@@ -50,7 +49,7 @@ window.onload = () => {
         gender: document.getElementById('edit-gender').value,
         marks: document.getElementById('edit-marks').value
       };
- 
+
       fetch(`http://localhost:4000/update-student/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -60,19 +59,10 @@ window.onload = () => {
       });
     });
   }
- 
-  // Load student details on student.html
-  if (window.location.pathname.includes('student.html')) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const studentId = urlParams.get('id');
- 
-    if (!studentId) {
-      alert("Invalid student ID");
-      window.location.href = "index.html";
-      return;
-    }
- 
-    fetch(`http://localhost:4000/students/${studentId}`)
+
+  // 3. student.html — View student and attach Edit/Delete
+  if (path.includes('student.html') && id) {
+    fetch(`http://localhost:4000/students/${id}`)
       .then(res => res.json())
       .then(student => {
         document.getElementById("detail-name").value = student.name;
@@ -86,30 +76,37 @@ window.onload = () => {
         alert("Student not found.");
         window.location.href = "index.html";
       });
- 
-    window.editStudent = () => {
-      window.location.href = `edit.html?id=${studentId}`;
-    };
- 
-    window.deleteStudent = () => {
-      if (confirm("Are you sure you want to delete this student?")) {
-        fetch(`http://localhost:4000/delete-student/${studentId}`, {
-          method: "DELETE",
-        })
-          .then(() => {
-            alert("Student deleted successfully.");
-            window.location.href = "index.html";
+
+    const editBtn = document.getElementById('editBtn');
+    const deleteBtn = document.getElementById('deleteBtn');
+
+    if (editBtn) {
+      editBtn.addEventListener('click', () => {
+        window.location.href = `edit.html?id=${id}`;
+      });
+    }
+
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', () => {
+        if (confirm("Are you sure you want to delete this student?")) {
+          fetch(`http://localhost:4000/delete-student/${id}`, {
+            method: 'DELETE'
           })
-          .catch(err => {
-            alert("Failed to delete student.");
-            console.error(err);
-          });
-      }
-    };
+            .then(() => {
+              alert("Student deleted successfully.");
+              window.location.href = "index.html";
+            })
+            .catch(err => {
+              alert("Failed to delete student.");
+              console.error(err);
+            });
+        }
+      });
+    }
   }
 };
- 
-// Add student on add.html
+
+// 4. Add new student on add.html
 document.addEventListener('DOMContentLoaded', () => {
   const addForm = document.getElementById('addForm');
   if (addForm) {
@@ -121,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gender: document.getElementById('gender').value,
         marks: document.getElementById('marks').value
       };
- 
+
       fetch('http://localhost:4000/add-student', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -132,7 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
- 
+
+// 5. Delete function used in index.html table
 function deleteStudent(id) {
   if (confirm('Are you sure you want to delete this student?')) {
     fetch(`http://localhost:4000/delete-student/${id}`, {
@@ -142,7 +140,8 @@ function deleteStudent(id) {
     });
   }
 }
- 
+
+// 6. Grade calculation logic
 function calculateGrade(marks) {
   const m = parseInt(marks);
   if (m >= 90) return 'A';
@@ -151,6 +150,4 @@ function calculateGrade(marks) {
   if (m >= 45) return 'D';
   return 'F';
 }
- 
 
- 
