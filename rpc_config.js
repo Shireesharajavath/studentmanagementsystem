@@ -1,3 +1,4 @@
+
 import { RetoolRPC } from "retoolrpc";
 import {
   getAllStudents,
@@ -15,6 +16,7 @@ const rpc = new RetoolRPC({
   version: '0.0.1',
   logLevel: 'info',
 });
+
 
 
 rpc.register({
